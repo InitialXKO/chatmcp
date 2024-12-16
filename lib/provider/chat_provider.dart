@@ -13,6 +13,8 @@ class ChatProvider extends ChangeNotifier {
 
   Chat? _activeChat;
   List<Chat> _chats = [];
+  bool isSelectMode = false;
+  Set<int?> selectedChats = {};
 
   Chat? get activeChat => _activeChat;
   List<Chat> get chats => _chats;
@@ -80,5 +82,71 @@ class ChatProvider extends ChangeNotifier {
       ));
     }
     notifyListeners();
+  }
+
+  void enterSelectMode() {
+    isSelectMode = true;
+    selectedChats.clear();
+    notifyListeners();
+  }
+
+  void exitSelectMode() {
+    isSelectMode = false;
+    selectedChats.clear();
+    notifyListeners();
+  }
+
+  void selectChat(int? chatId) {
+    selectedChats.add(chatId);
+    notifyListeners();
+  }
+
+  void unselectChat(int? chatId) {
+    selectedChats.remove(chatId);
+    notifyListeners();
+  }
+
+  void toggleSelectChat(int? chatId) {
+    if (selectedChats.contains(chatId)) {
+      selectedChats.remove(chatId);
+    } else {
+      selectedChats.add(chatId);
+    }
+    notifyListeners();
+  }
+
+  void toggleSelectAll() {
+    if (selectedChats.length == chats.length) {
+      selectedChats.clear();
+    } else {
+      selectedChats = chats.map((chat) => chat.id).toSet();
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteSelectedChats() async {
+    final chatDao = ChatDao();
+
+    // 从数据库中删除选中的聊天记录
+    for (var chatId in selectedChats) {
+      if (chatId != null) {
+        await chatDao.delete(chatId.toString());
+      }
+    }
+
+    // 重新加载聊天列表
+    await loadChats();
+
+    // 如果当前活动的聊天被删除，需要更新activeChat
+    if (selectedChats.contains(activeChat?.id)) {
+      if (_chats.isNotEmpty) {
+        await setActiveChat(_chats.first);
+      } else {
+        await clearActiveChat();
+      }
+    }
+
+    // 退出选择模式
+    exitSelectMode();
   }
 }

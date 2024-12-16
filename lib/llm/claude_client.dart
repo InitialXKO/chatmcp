@@ -164,6 +164,9 @@ class ClaudeClient extends BaseLLMClient {
 
             switch (eventType) {
               case 'content_block_start':
+                final content = event['content_block'];
+                final text = content['text'];
+                yield LLMResponse(content: text);
               case 'content_block_delta':
                 final delta = event['delta'];
                 if (delta['type'] == 'text_delta') {

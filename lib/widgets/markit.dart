@@ -189,9 +189,7 @@ class HighlightView extends StatelessWidget {
       fontFamily: _defaultFontFamily,
       color: theme[_rootKey]?.color ?? _defaultFontColor,
     );
-    if (textStyle != null) {
-      textStyle = textStyle.merge(textStyle);
-    }
+    textStyle = textStyle.merge(textStyle);
 
     return Container(
       color: theme[_rootKey]?.backgroundColor ?? _defaultBackgroundColor,

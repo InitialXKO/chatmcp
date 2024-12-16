@@ -59,34 +59,47 @@ class _LayoutPageState extends State<LayoutPage> {
                             }),
                           ),
                         // model select
-                        DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              value: chatModelProvider.currentModel,
-                              items: ProviderManager
-                                  .chatModelProvider.availableModels
-                                  .map((model) => DropdownMenuItem(
-                                        value: model.name,
-                                        child: Text(model.label),
-                                      ))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                if (value != null) {
-                                  setState(() {
-                                    ProviderManager
-                                        .chatModelProvider.currentModel = value;
-                                  });
-                                }
-                              },
-                              menuMaxHeight: 200,
-                              elevation: 20,
-                              isDense: true,
-                              underline: Container(
-                                height: 0,
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 150),
+                          decoration: BoxDecoration(
+                            // color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                value: chatModelProvider.currentModel,
+                                items: ProviderManager
+                                    .chatModelProvider.availableModels
+                                    .map((model) => DropdownMenuItem(
+                                          value: model.name,
+                                          child: Tooltip(
+                                            message: model.label,
+                                            child: Text(
+                                              model.label,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                onChanged: (String? value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      ProviderManager.chatModelProvider
+                                          .currentModel = value;
+                                    });
+                                  }
+                                },
+                                menuMaxHeight: 200,
+                                elevation: 20,
+                                isDense: true,
+                                underline: Container(
+                                  height: 0,
+                                ),
+                                isExpanded: true,
+                                alignment: AlignmentDirectional.centerStart,
                               ),
-                              isExpanded: false,
-                              alignment: AlignmentDirectional.centerStart,
                             ),
                           ),
                         ),
