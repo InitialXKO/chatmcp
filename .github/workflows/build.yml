@@ -73,9 +73,7 @@ jobs:
       
       - name: Package Windows App
         if: matrix.os == 'windows-latest'
-        run: |
-          Copy-Item -Path "windows/sqlite3.dll" -Destination "${{ matrix.output_path }}" -Force
-          Compress-Archive -Path "${{ matrix.output_path }}/*" -DestinationPath "${{ matrix.asset_name }}" -Force
+        run: Compress-Archive -Path "${{ matrix.output_path }}/*" -DestinationPath "${{ matrix.asset_name }}" -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
