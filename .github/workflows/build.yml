@@ -22,7 +22,7 @@ jobs:
             build_target: macos
           - os: windows-latest
             output_path: build/windows/x64/Runner/Release
-            asset_name: chatmcp-windows-x64.zip
+            asset_name: chatmcp.exe
             build_target: windows
     runs-on: ${{ matrix.os }}
     
@@ -70,10 +70,6 @@ jobs:
             --app-drop-link 600 185 \
             "${{ matrix.asset_name }}" \
             "${{ matrix.output_path }}"
-      
-      - name: Package Windows App
-        if: matrix.os == 'windows-latest'
-        run: Compress-Archive -Path "${{ matrix.output_path }}/*" -DestinationPath "${{ matrix.asset_name }}" -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
